@@ -16,28 +16,7 @@ from Browser import Browser
 
 class Crawlr():
     def __init__(self, opt ={}):
-        if 'browser' not in opt:
-            opt['browser'] = "firefox";
-        if 'backend' not in opt:
-            opt['backend'] = {
-                'type':'file',
-                'opt':{
-                    'filename':'db.csv'
-                }
-            }
-        if 'logger' not in opt:
-            opt['logger'] = {
-                'backend':{
-                    'type':'couchdb',
-                    'opt':{
-                        'endpoint':'db.spotlive.io',
-                    }
-                },
-                'screenshot':{
-                    'endpoint':'bot.spotlive.io'
-                }
-            }
-
+        opt = self.__initializeOptions(opt)
         self.browser = Browser(opt['browser']);
         self.backend = Backend(opt['backend']);
         self.logger = Notifier(opt['logger']);
@@ -46,6 +25,24 @@ class Crawlr():
         del self.browser;
         del self.backend;
         del self.notify;
+
+    def __initializeOptions(self, opt):
+        if 'browser' not in opt:
+            opt['browser'] = "firefox";
+        if 'backend' not in opt:
+            opt['backend'] = {
+                'plugin':'file',
+                'opt':{
+                    'filename':'db.csv'
+                }
+            }
+        if 'logger' not in opt:
+            opt['logger'] = {
+                'backend':{
+                    'plugin':'stdout',
+                }
+            }
+        return opt;
 
 if __name__ == '__main__':
     crawl = Crawlr();

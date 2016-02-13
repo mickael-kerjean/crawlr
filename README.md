@@ -20,6 +20,10 @@ Some easy things that can be done painlessly with Crawlr go from:
 ...
 the list goes on and on.
 
+# The spirit
+Selenium can still be use directly, everything is pluggable so that
+log and backend system can be interchange directly without issues.
+
 # The parts
 ## Browser automation
 It makes use of selenium but:
@@ -34,13 +38,17 @@ It makes use of selenium but:
   3) then verify the current element has disappear
   4) verify the current page you are in the good one
   Writing properly one single interaction can be cumbersome using
-  selenium. This is how to do that using Crawlr:
+  selenium.
+
+  This is how to do that using Crawlr:
+
   ```
   self.click(self.page['login']['buttons']['submit'], {
       'thenDisappear':True,
       'thenWait':self.page['homepage']['search']
   });
   ```
+
 - without the cumbersome setup. A selection of driver are already
   preinstall. You don't need to worry about loading everything in your
   path or anything like that. Just have the browser you wish to

@@ -25,7 +25,7 @@ def main:
         page = crawlr.browser.find_element('body').text;
         crawler.backend.put(page);
 
-    crawlr.logger.log('I got stop!')
+    crawlr.logger.log('I\'m dead!')
 
 if __name__ == '__main__':
     main();

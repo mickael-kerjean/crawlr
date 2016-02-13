@@ -28,7 +28,6 @@ class Browser(object):
             self.driver.set_window_size(opt['resizeWindow']['width'], opt['resizeWindow']['height']);
 
         self.timeout = opt['timeout'];
-        return self;
 
 
     def __del__(self):
@@ -98,6 +97,11 @@ class Browser(object):
     def scroll_to(self, position = 0):
         self.driver.execute_script('window.scrollTo(0, '+str(position)+')')
 
+    def browse_a_link(self, fn):
+        els = self.find_elements('a');
+        ok = fn(els);
+        ok.click();
+        self.wait_for_page_fully_load();
 
     def _click(self, el):
         self.find_element(el).click();

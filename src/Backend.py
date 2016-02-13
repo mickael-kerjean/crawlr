@@ -1,47 +1,45 @@
-###################################
-## Implementation of a simple backend
-import os;
-import csv;
-class Backend(object):
-    def __init__(self, opt):
-        self.logfile = 'db.csv';
-        self.params = opt;
+# This guy is our backend. He can:
+# - check if an entry already exist or not
+# - put new data in database
 
-    def get(self, confKey):
+class BackendInterface(object):
+    def constructor(self):
+        pass
+    def alreadyExist(self, key):
+        pass
+    def put(self, key, something):
         pass
 
-    def doesExist(self, title):
-        if not os.path.isfile(self.logfile):
-            return False;
 
-        with open(self.logfile) as csvfile:
-            reader = csv.DictReader(csvfile);
-            for row in reader:
-                if row['title'] == title:
-                    return True;
-        return False;
+class Backend(object):
+    def __init__(self, opt):
+        self.params = opt;
+        self.backend = {};
+        execfile("plugins/Backend_"+opt['plugin']+".py", self.backend);
+        self.backend = self.backend['export']
+        self.backend.constructor(self.params)
 
+    def alreadyExist(self, key):
+        a = self.backend(key);
+        if not isinstance(a, bool):
+            raise TypeError('issues with the plugin: '+self.params['plugin']);
+        else:
+            return a;
 
     def put(self, obj):
-        # verify data integrity
-        if obj.has_key('title') == False:
-            obj['title'] = ''
-        if obj.has_key('post_date') == False:
-            obj['post_date'] = ''
-        if obj.has_key('status') == False:
-            obj['status'] = ''
-        obj = {
-            'title': obj['title'],
-            'post_date':obj['post_date'],
-            'status': obj['status']
-        }
+        self.backend.put(obj);
 
-        # write log
-        if not os.path.isfile(self.logfile):
-            with open(self.logfile, 'a') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=['title', 'post_date', 'status']);
-                writer.writeheader();
 
-        with open(self.logfile, 'a') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=['title', 'post_date', 'status'])
-            writer.writerow(obj)
+
+if __name__ == '__main__':
+
+    # test of the csv backend
+    backend = Backend('', {
+        'plugin':"csv"
+    });
+    backend.put('test.com', {
+        'name':'baymax',
+        'url': 'test.com'
+    });
+    if not backend.alreadyExist('test.com'):
+        raise ValueError('euh, you miss it');
