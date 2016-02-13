@@ -20,26 +20,32 @@ class Backend(object):
         self.backend.constructor(self.params)
 
     def alreadyExist(self, key):
-        a = self.backend(key);
-        if not isinstance(a, bool):
+        res = self.backend.alreadyExist(key);
+        if not isinstance(res, bool):
             raise TypeError('issues with the plugin: '+self.params['plugin']);
         else:
-            return a;
+            return res;
 
-    def put(self, obj):
-        self.backend.put(obj);
+    def put(self, key, obj):
+        self.backend.put(key, obj);
 
 
 
 if __name__ == '__main__':
-
     # test of the csv backend
-    backend = Backend('', {
-        'plugin':"csv"
+    import os
+    backend = Backend({
+        'plugin':"csv",
+        'path':'./',
+        'filename':"db.csv"
     });
+    os.remove('db.csv')
+    if backend.alreadyExist('test.com') != False:
+        raise ValueError('euh, you miss it, it doesn\'t exist');
+
     backend.put('test.com', {
         'name':'baymax',
         'url': 'test.com'
     });
-    if not backend.alreadyExist('test.com'):
-        raise ValueError('euh, you miss it');
+    if backend.alreadyExist('test.com') != True:
+        raise ValueError('euh, you miss it, it already exist');

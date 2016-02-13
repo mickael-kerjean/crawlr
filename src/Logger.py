@@ -16,7 +16,7 @@ class LoggerInterface(object):
 
 
 class Logger(object):
-    def __init__(self, browser, opt):
+    def __init__(self, opt):
         self.botId = self._pickAName();
         self.params = opt;
         self.logger = {};
@@ -49,7 +49,7 @@ class Logger(object):
 
 if __name__ == '__main__':
     import sys;
-    log = Logger('', {
+    log = Logger({
         'plugin':"stdout"
     });
 
