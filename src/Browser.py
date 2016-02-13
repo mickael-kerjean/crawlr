@@ -14,7 +14,7 @@ class Browser(object):
     # setup a browser
     def __init__(self, opt):
         if 'browser' not in opt:
-            opt['browser'] = 'firefox';
+            opt['browser'] = 'firefox'
         if 'timeout' not in opt:
             opt['timeout'] = 15;
 

@@ -13,9 +13,15 @@ class BackendInterface(object):
 
 class Backend(object):
     def __init__(self, opt):
+        if 'plugin' not in opt:
+            raise ValueError("no plugin selected")
         self.params = opt;
         self.backend = {};
-        execfile("plugins/Backend_"+opt['plugin']+".py", self.backend);
+        try:
+            execfile("plugins/Backend_"+opt['plugin']+".py", self.backend);
+        except:
+            raise ValueError("Plugin doesn't exist");
+
         self.backend = self.backend['export']
         self.backend.constructor(self.params)
 

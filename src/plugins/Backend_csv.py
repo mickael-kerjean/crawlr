@@ -3,11 +3,11 @@ import csv;
 
 class BackendCSV(object):
     def constructor(self, opt):
-        self.logfile = opt['path']+opt['filename'];
+        try:
+            self.logfile = opt['path']+opt['filename'];
+        except:
+            raise ValueError("need a path and filename option")
         self.params = opt;
-
-    def get(self, confKey):
-        pass
 
     def alreadyExist(self, key_value):
         if not os.path.isfile(self.logfile):

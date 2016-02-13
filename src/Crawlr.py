@@ -17,32 +17,42 @@ from Browser import Browser
 class Crawlr():
     def __init__(self, opt ={}):
         opt = self.__initializeOptions(opt)
+        print opt['browser']
         self.browser = Browser(opt['browser']);
         self.backend = Backend(opt['backend']);
-        self.logger = Notifier(opt['logger']);
+        self.logger = Logger(opt['logger']);
 
     def __del__(self):
-        del self.browser;
-        del self.backend;
-        del self.notify;
+        pass
+        # del self.browser;
+        # del self.backend;
+        # del self.notify;
 
     def __initializeOptions(self, opt):
         if 'browser' not in opt:
-            opt['browser'] = "firefox";
+            opt['browser'] = {
+                'browser':'chrome',
+                'resolution':{
+                    'width':'800',
+                    'height':'800'
+                }
+            };
         if 'backend' not in opt:
             opt['backend'] = {
-                'plugin':'file',
-                'opt':{
-                    'filename':'db.csv'
-                }
+                'plugin':'csv',
+                'filename':'db.csv',
+                'path':'./'
             }
         if 'logger' not in opt:
             opt['logger'] = {
-                'backend':{
-                    'plugin':'stdout',
-                }
+                'plugin':'stdout',
             }
         return opt;
 
 if __name__ == '__main__':
-    crawl = Crawlr();
+    crawl = Crawlr({
+        'browser':{
+            "browser":"firefox"
+        }
+    });
+    crawl.browser.go('http://google.com')

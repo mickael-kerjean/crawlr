@@ -17,6 +17,8 @@ class LoggerInterface(object):
 
 class Logger(object):
     def __init__(self, opt):
+        if 'plugin' not in opt:
+            raise ValueError('no plugin selected');
         self.botId = self._pickAName();
         self.params = opt;
         self.logger = {};
