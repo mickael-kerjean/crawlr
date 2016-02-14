@@ -65,9 +65,7 @@ CouchDB but is is pluggable so it should be fairly simple to implement
 anything else
 
 
-# Example
-There is an example in the example folder of the repo. It show a more
-concrete example of how you can use Crawlr to perform a task
+# Run a script in a server without graphical interface
 
 If you want to run it on a server you would need to install xvbf to
 emulate a display. Basically:
@@ -83,3 +81,68 @@ you will get.
 
 The cool thing is you can even take pictures from the browser event if
 the server doesn't have X install and access those screenshot from a url.
+
+
+# Concrete example of the selenium fatigue
+
+If we want to search something on google and press the first link:
+
+``` python
+from time import sleep
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+searchInput = 'input.gsfi';
+search = "nyan cat video"
+resultBox = "#ires h3 a";
+
+driver = webdriver.Firefox();
+driver.get('http://google.com');
+
+WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, searchInput)));
+el = driver.find_element_by_css_selector(searchInput);
+el.send_keys(search+Keys.ENTER);
+
+WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, resultBox)));
+el = driver.find_element_by_css_selector(resultBox);
+el.click();
+WebDriverWait(driver, 15).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, resultBox)))
+
+sleep(20)
+driver.quit();
+```
+
+It looks very heavy and forgetting any of those line remove stability
+from your script and you will endup spending time to figureout what is
+the problem with this bug... We shouldn't assume by default the
+content we expect will be here even if we wait 1 second before to do
+something (what if it take 2 seconds to load a page? Are you sure you
+want to throw an error?)
+
+Using Crawlr, it simply become:
+
+``` python
+
+import Crawlr
+crawl = Crawlr();
+crawl.logger.log("let's get started")
+
+crawl.browser.go('http://google.com')
+
+crawl.browser.write("input.gsfi", "nyan cat video", {
+'thenPressEnter':True,
+'thenDisappear':True,
+'thenWait':"#ires h3 a",
+});
+
+crawl.browser.click("#ires h3 a", {
+    'thenDisappear':True,
+    'thenWait':"#masthead-search-term"
+});
+
+crawl.logger.log("LA LA LALALALALA LA LA")
+time.sleep(30)
+```

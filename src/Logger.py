@@ -6,6 +6,7 @@
 from traceback import format_exception;
 from random import choice, randrange;
 from datetime import datetime;
+from Plugin import Plugin
 
 class LoggerInterface(object):
     def constructor(self):
@@ -21,9 +22,7 @@ class Logger(object):
             raise ValueError('no plugin selected');
         self.botId = self._pickAName();
         self.params = opt;
-        self.logger = {};
-        execfile("plugins/Logger_"+opt['plugin']+".py", self.logger);
-        self.logger = self.logger['export']
+        self.logger = Plugin().load("plugins/Logger_"+opt['plugin']+".py")
         self.logger.constructor(self.params)
 
 

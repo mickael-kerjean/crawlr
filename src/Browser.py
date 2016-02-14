@@ -113,7 +113,7 @@ class Browser(object):
         if 'thenDisappear' in opt:
             WebDriverWait(self.driver, self.timeout).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, opt['thenDisappear'])))
         if 'thenWait' in opt:
-            self.waitForElement(opt['thenWait']);
+            self.wait_for_element(opt['thenWait']);
 
     def _readystate_complete(self, e):
         return e.execute_script("return document.readyState") == "complete"

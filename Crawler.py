@@ -10,9 +10,9 @@
 # The Browser class is only here to give a convenient api for selenium
 #
 
-from Backend import Backend
-from Logger import Logger
-from Browser import Browser
+from src.Backend import Backend
+from src.Logger import Logger
+from src.Browser import Browser
 
 class Crawlr():
     def __init__(self, opt ={}):
@@ -55,4 +55,17 @@ if __name__ == '__main__':
             "browser":"firefox"
         }
     });
+    import time;
+    crawl.logger.log("let's get started")
     crawl.browser.go('http://google.com')
+    crawl.browser.write("input.gsfi", "nyan cat video", {
+        'thenPressEnter':True,
+        'thenDisappear':True,
+        'thenWait':"#ires h3 a",
+    });
+    crawl.browser.click("#ires h3 a", {
+        'thenDisappear':True,
+        'thenWait':"#masthead-search-term"
+    })
+    crawl.logger.log("LA LA LALALALALA LA LA")
+    time.sleep(30)

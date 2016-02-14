@@ -1,6 +1,7 @@
 # This guy is our backend. He can:
 # - check if an entry already exist or not
 # - put new data in database
+from Plugin import Plugin
 
 class BackendInterface(object):
     def constructor(self):
@@ -16,13 +17,7 @@ class Backend(object):
         if 'plugin' not in opt:
             raise ValueError("no plugin selected")
         self.params = opt;
-        self.backend = {};
-        try:
-            execfile("plugins/Backend_"+opt['plugin']+".py", self.backend);
-        except:
-            raise ValueError("Plugin doesn't exist");
-
-        self.backend = self.backend['export']
+        self.backend = Plugin().load("plugins/Backend_"+opt['plugin']+".py")
         self.backend.constructor(self.params)
 
     def alreadyExist(self, key):
